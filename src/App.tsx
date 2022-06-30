@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Provider } from "react-redux";
 import "./App.css";
 import { Cart } from "./components/Cart/Cart";
 import { Header } from "./components/Layout/Header";
 import { Meals } from "./components/Meals/Meals";
-import { CartProvider } from "./store/cart-provider.model";
+import { store } from "./store/store";
 
 function App() {
   const [cartIsShown, setCartIsShown] = useState(false);
@@ -17,13 +18,13 @@ function App() {
   };
 
   return (
-    <CartProvider>
+    <Provider store={store}>
       {cartIsShown && <Cart onClose={hideCartHandler} />}
       <Header onShowCart={showCartHandler} />
       <main>
         <Meals />
       </main>
-    </CartProvider>
+    </Provider>
   );
 }
 

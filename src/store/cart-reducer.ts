@@ -1,9 +1,13 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { CartItem } from "../models/cart-item.model";
 import { CartAction, CartActionTypes } from "./cart-actions";
-import { defaultState } from "./cart-context";
-import { IState } from "./state";
+import { defaultState, IState } from "./state";
 
-export const cartReducer = (state: IState, action: CartAction): IState => {
+export const cartReducer = (
+  state: IState = defaultState,
+  action: CartAction
+): IState => {
+  debugger;
   switch (action.type) {
     case CartActionTypes.AddCartItem: {
       const updateTotalAmount =
@@ -67,3 +71,14 @@ export const cartReducer = (state: IState, action: CartAction): IState => {
       return defaultState;
   }
 };
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState: defaultState,
+  reducers: {},
+  extraReducers: {
+    cartReducer,
+  },
+});
+
+export default cartSlice.reducer;

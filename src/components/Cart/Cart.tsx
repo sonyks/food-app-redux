@@ -1,25 +1,33 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { createOrder } from "../../firebase-service/firebase";
 import { CartItem } from "../../models/cart-item.model";
-import CartContext from "../../store/cart-context";
 import { Modal } from "../UI/Modal";
 import { CartProps } from "./models/cart-props.model";
 import "./Cart.scss";
 import { CartItemComponent } from "./CartItem";
 import { Checkout } from "./Checkout";
 import { CheckoutModel } from "./models/checkout.model";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCartItemAction,
+  clearItemsAction,
+  removeCartItemAction,
+} from "../../store/cart-actions";
+import { IState } from "../../store/state";
 
 export const Cart = (props: CartProps) => {
-  const cartCtx = useContext(CartContext);
   const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
+  const dispatch = useDispatch();
+  const selectedItems = useSelector((state: IState) => state.items);
+  const selectedTotalAmount = useSelector((state: IState) => state.totalAmount);
 
   const cartItemRemoveHandler = (id: string) => {
-    cartCtx.removeItem(id);
+    dispatch(removeCartItemAction(id));
   };
   const cartItemAddHandler = (item: CartItem) => {
-    cartCtx.addItem({ ...item, amount: 1 });
+    dispatch(addCartItemAction({ ...item, amount: 1 }));
   };
 
   const orderHandler = () => {
@@ -28,7 +36,7 @@ export const Cart = (props: CartProps) => {
 
   const submitOrderHandler = async (data: CheckoutModel) => {
     setIsSubmitting(true);
-    const items = cartCtx.items;
+    const items = selectedItems;
     await createOrder({
       user: data,
       orderItems: items,
@@ -36,12 +44,12 @@ export const Cart = (props: CartProps) => {
 
     setIsSubmitting(false);
     setDidSubmit(true);
-    cartCtx.clearItems();
+    dispatch(clearItemsAction());
   };
 
   const cartItems = (
     <ul className="cart-items">
-      {cartCtx.items.map((item) => (
+      {selectedItems.map((item) => (
         <CartItemComponent
           item={item}
           key={item.id}
@@ -51,9 +59,9 @@ export const Cart = (props: CartProps) => {
       ))}
     </ul>
   );
-  const hasItems = cartCtx.items.length > 0;
+  const hasItems = selectedItems.length > 0;
 
-  const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
+  const totalAmount = `$${selectedTotalAmount.toFixed(2)}`;
 
   const modalActions = (
     <div className="actions">

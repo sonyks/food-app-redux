@@ -1,3 +1,4 @@
+import { createAction } from "@reduxjs/toolkit";
 import { CartItem } from "../models/cart-item.model";
 
 export enum CartActionTypes {
@@ -5,6 +6,14 @@ export enum CartActionTypes {
   RemoveCartItem = "REMOVE_ITEM",
   ClearItems = "CLEAR_ITEMS",
 }
+
+export const addCartItemAction = createAction<CartItem>(
+  CartActionTypes.AddCartItem
+);
+export const removeCartItemAction = createAction<string>(
+  CartActionTypes.RemoveCartItem
+);
+export const clearItemsAction = createAction(CartActionTypes.ClearItems);
 
 export type CartAction =
   | {
