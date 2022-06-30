@@ -3,14 +3,14 @@ import { MealItemForm } from "./MealItemForm";
 import { useRef } from "react";
 import { Meal } from "../../../models/meal.model";
 import { useDispatch } from "react-redux";
-import { addCartItemAction } from "../../../store/cart-actions";
+import { addCartItem } from "../../../store/cart-reducer";
 
 export const MealItem = (props: Meal) => {
   const amountInputRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useDispatch();
   const addToCartHandler = (amount: number) => {
     dispatch(
-      addCartItemAction({
+      addCartItem({
         id: props.id,
         amount: amount,
         name: props.name,

@@ -8,12 +8,12 @@ import { CartItemComponent } from "./CartItem";
 import { Checkout } from "./Checkout";
 import { CheckoutModel } from "./models/checkout.model";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addCartItemAction,
-  clearItemsAction,
-  removeCartItemAction,
-} from "../../store/cart-actions";
 import { IState } from "../../store/state";
+import {
+  addCartItem,
+  clearItems,
+  removeCartItem,
+} from "../../store/cart-reducer";
 
 export const Cart = (props: CartProps) => {
   const [isCheckout, setIsCheckout] = useState(false);
@@ -24,10 +24,10 @@ export const Cart = (props: CartProps) => {
   const selectedTotalAmount = useSelector((state: IState) => state.totalAmount);
 
   const cartItemRemoveHandler = (id: string) => {
-    dispatch(removeCartItemAction(id));
+    dispatch(removeCartItem(id));
   };
   const cartItemAddHandler = (item: CartItem) => {
-    dispatch(addCartItemAction({ ...item, amount: 1 }));
+    dispatch(addCartItem({ ...item, amount: 1 }));
   };
 
   const orderHandler = () => {
@@ -44,7 +44,7 @@ export const Cart = (props: CartProps) => {
 
     setIsSubmitting(false);
     setDidSubmit(true);
-    dispatch(clearItemsAction());
+    dispatch(clearItems());
   };
 
   const cartItems = (
