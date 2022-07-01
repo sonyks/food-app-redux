@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { IState } from "../../store/state";
+import { useAppSelector } from "../../store/hooks";
 import { CartIcon } from "../Cart/CartIcon";
 import { HeaderCartButtonProps } from "./header-cart-button-props.model";
 import "./HeaderCartButton.scss";
 
 export const HeaderCartButton = (props: HeaderCartButtonProps) => {
   const [btnIsHighlighted, setBtnIsHighlighted] = useState(false);
-  const items = useSelector((state: IState) => state.items);
-
+  const items = useAppSelector((state) => state.cartReducer.items);
   const numberOfCartItems = items.reduce((curNumber, item) => {
     return curNumber + item.amount;
   }, 0);
@@ -17,6 +15,7 @@ export const HeaderCartButton = (props: HeaderCartButtonProps) => {
     if (items.length === 0) {
       return;
     }
+
     setBtnIsHighlighted(true);
 
     const timer = setTimeout(() => {

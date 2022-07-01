@@ -7,21 +7,23 @@ import "./Cart.scss";
 import { CartItemComponent } from "./CartItem";
 import { Checkout } from "./Checkout";
 import { CheckoutModel } from "./models/checkout.model";
-import { useDispatch, useSelector } from "react-redux";
-import { IState } from "../../store/state";
+import { useDispatch } from "react-redux";
 import {
   addCartItem,
   clearItems,
   removeCartItem,
 } from "../../store/cart-reducer";
+import { useAppSelector } from "../../store/hooks";
 
 export const Cart = (props: CartProps) => {
   const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
   const dispatch = useDispatch();
-  const selectedItems = useSelector((state: IState) => state.items);
-  const selectedTotalAmount = useSelector((state: IState) => state.totalAmount);
+  const selectedItems = useAppSelector((state) => state.cartReducer.items);
+  const selectedTotalAmount = useAppSelector(
+    (state) => state.cartReducer.totalAmount
+  );
 
   const cartItemRemoveHandler = (id: string) => {
     dispatch(removeCartItem(id));
@@ -59,7 +61,7 @@ export const Cart = (props: CartProps) => {
       ))}
     </ul>
   );
-  const hasItems = selectedItems.length > 0;
+  const hasItems = selectedItems !== undefined && selectedItems.length > 0;
 
   const totalAmount = `$${selectedTotalAmount.toFixed(2)}`;
 
